@@ -22,7 +22,7 @@ public partial class AboutViewModel : ObservableObject
     
     public string Copyright => $"© {DateTime.Now.Year} Big Picture Auto Audio Switch";
     
-    public string GitHubUrl => "https://github.com/yourusername/big-picture-auto-audio-switch";
+    public string GitHubUrl => "https://github.com/PatchesTheFirst/big-picture-auto-audio-switch";
 
     [RelayCommand]
     private void OpenGitHub()
