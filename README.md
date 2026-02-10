@@ -133,6 +133,10 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
+## Support
+
+If you find this project helpful, consider buying me a coffee at [ko-fi](https://ko-fi.com/patchesthefirst87940)
+
 ## Acknowledgments
 
 - Inspired by the original [BigPictureAudioSwitch](https://github.com/cinterre/BigPictureAudioSwitch)
