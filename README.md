@@ -24,7 +24,7 @@ A modern Windows system tray application that automatically switches your defaul
 
 ### Portable (Recommended)
 
-1. Download the latest release from the [Releases](https://github.com/yourusername/big-picture-auto-audio-switch/releases) page
+1. Download the latest release from the [Releases](https://github.com/PatchesTheFirst/big-picture-auto-audio-switch/releases) page
 2. Extract to a folder of your choice (e.g., `C:\Tools\BigPictureAutoAudioSwitch`)
 3. Run `BigPictureAutoAudioSwitch.exe`
 
