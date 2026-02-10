@@ -1,0 +1,126 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:tb="clr-namespace:H.NotifyIcon;assembly=H.NotifyIcon.Wpf"
+                    xmlns:helpers="clr-namespace:BigPictureAutoAudioSwitch.Helpers">
+
+    <tb:TaskbarIcon x:Key="TrayIcon"
+                    IconSource="/Assets/Icon.ico"
+                    ToolTipText="{Binding StatusText}"
+                    DoubleClickCommand="{Binding ShowSettingsCommand}">
+        
+        <tb:TaskbarIcon.Resources>
+            <helpers:BindingProxy x:Key="ViewModelProxy" Data="{Binding}" />
+        </tb:TaskbarIcon.Resources>
+        
+        <tb:TaskbarIcon.ContextMenu>
+            <ContextMenu x:Name="TrayContextMenu">
+                <ContextMenu.Resources>
+                    <!-- Context Menu gets its own copy of resources since it's not in the visual tree -->
+                    <Style TargetType="ContextMenu">
+                        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+                        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+                        <Setter Property="BorderThickness" Value="1" />
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ContextMenu">
+                                    <Border Background="{DynamicResource SurfaceBrush}"
+                                            BorderBrush="{DynamicResource BorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="4"
+                                            Padding="0">
+                                        <StackPanel IsItemsHost="True" 
+                                                    KeyboardNavigation.DirectionalNavigation="Cycle"
+                                                    Margin="0,4" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                        <Setter Property="Padding" Value="12,8" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="MenuItem">
+                                    <Border x:Name="Border" 
+                                            Background="{TemplateBinding Background}" 
+                                            BorderThickness="0"
+                                            Padding="{TemplateBinding Padding}"
+                                            Margin="4,0">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <!-- Accent indicator bar -->
+                                            <Border x:Name="AccentBar" 
+                                                    Grid.Column="0"
+                                                    Width="3" 
+                                                    Margin="-8,0,8,0"
+                                                    CornerRadius="1.5"
+                                                    Background="Transparent" />
+                                            <ContentPresenter Grid.Column="1"
+                                                              ContentSource="Header" 
+                                                              HorizontalAlignment="Left" 
+                                                              VerticalAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsHighlighted" Value="True">
+                                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource SurfaceHoverBrush}" />
+                                            <Setter TargetName="AccentBar" Property="Background" Value="{DynamicResource AccentBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                    <Style TargetType="Separator">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Separator">
+                                    <Border Background="{DynamicResource BorderBrush}" 
+                                            Height="1" 
+                                            Margin="12,4" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ContextMenu.Resources>
+                <MenuItem Header="{Binding Data.StatusText, Source={StaticResource ViewModelProxy}}" IsEnabled="False" FontWeight="SemiBold" />
+                <Separator />
+                <MenuItem Header="Settings..." Command="{Binding Data.ShowSettingsCommand, Source={StaticResource ViewModelProxy}}" />
+                <MenuItem Header="About..." Command="{Binding Data.ShowAboutCommand, Source={StaticResource ViewModelProxy}}" />
+                <Separator />
+                <MenuItem Header="Exit" Command="{Binding Data.ExitCommand, Source={StaticResource ViewModelProxy}}" />
+            </ContextMenu>
+        </tb:TaskbarIcon.ContextMenu>
+        
+        <tb:TaskbarIcon.TrayToolTip>
+            <Border Background="{DynamicResource SurfaceBrush}" 
+                    BorderBrush="{DynamicResource BorderBrush}" 
+                    BorderThickness="1" 
+                    CornerRadius="6" 
+                    Padding="12,8">
+                <StackPanel>
+                    <TextBlock Text="Big Picture Auto Audio Switch" 
+                               Foreground="{DynamicResource TextBrush}" 
+                               FontWeight="SemiBold"
+                               FontSize="12" />
+                    <TextBlock Text="{Binding Data.StatusText, Source={StaticResource ViewModelProxy}}" 
+                               Foreground="{DynamicResource TextSecondaryBrush}" 
+                               FontSize="11"
+                               Margin="0,2,0,0" />
+                </StackPanel>
+            </Border>
+        </tb:TaskbarIcon.TrayToolTip>
+        
+    </tb:TaskbarIcon>
+
+</ResourceDictionary>
