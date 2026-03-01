@@ -63,7 +63,7 @@ jobs:
         Compress-Archive -Path publish/* -DestinationPath "BigPictureAutoAudioSwitch-v${{ steps.version.outputs.VERSION }}-win-x64.zip"
         
     - name: Upload artifacts
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: BigPictureAutoAudioSwitch-v${{ steps.version.outputs.VERSION }}-win-x64
         path: publish/
