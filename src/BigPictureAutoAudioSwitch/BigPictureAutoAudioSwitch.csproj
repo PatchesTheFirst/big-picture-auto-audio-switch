@@ -14,7 +14,7 @@
     <StartupObject>BigPictureAutoAudioSwitch.Program</StartupObject>
     
     <!-- Version Info -->
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Company>Big Picture Auto Audio Switch</Company>
     <Product>Big Picture Auto Audio Switch</Product>
     <Description>Automatically switch audio devices when Steam Big Picture Mode is detected</Description>
