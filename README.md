@@ -135,7 +135,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit a Pull Request. Notable changes are tracked in [CHANGELOG.md](CHANGELOG.md).
 
 ## Support
 
