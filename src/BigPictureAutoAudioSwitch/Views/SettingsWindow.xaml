@@ -4,9 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Big Picture Auto Audio Switch - Settings" 
-        Height="550" 
-        Width="500"
+        Title="Big Picture Auto Audio Switch - Settings"
+        Height="620"
+        Width="580"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource BackgroundBrush}"
         ResizeMode="NoResize">
