@@ -204,14 +204,20 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
     [RelayCommand]
     private void TestDevice()
     {
-        if (SelectedDevice != null)
+        if (SelectedDevice == null) return;
+
+        var previousDefault = _audioService.GetDefaultDevice();
+        _audioService.SetDefaultDevice(SelectedDevice.Id);
+
+        MessageBox.Show(
+            $"Audio switched to: {SelectedDevice.FullName}\n\nClick OK to restore your previous device.",
+            "Test Device",
+            MessageBoxButton.OK,
+            MessageBoxImage.Information);
+
+        if (previousDefault != null && previousDefault.Id != SelectedDevice.Id)
         {
-            _audioService.SetDefaultDevice(SelectedDevice.Id);
-            MessageBox.Show(
-                $"Audio switched to: {SelectedDevice.FullName}\n\nThis is a test - the device will remain active until changed.",
-                "Test Device",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
+            _audioService.SetDefaultDevice(previousDefault.Id);
         }
     }
 
