@@ -6,6 +6,7 @@ public static class AppConstants
 {
     public const string AppName = "BigPictureAutoAudioSwitch";
     public const string MutexName = "BigPictureAutoAudioSwitch_SingleInstance";
+    public const string ShowSettingsEventName = "BigPictureAutoAudioSwitch_ShowSettings";
     
     // Paths
     public static readonly string AppDataFolder = Path.Combine(

@@ -14,7 +14,16 @@ public static class Program
 
         if (!createdNew)
         {
-            // Another instance is already running
+            // Another instance is already running - ask it to show its Settings window
+            try
+            {
+                using var showSettingsEvent = EventWaitHandle.OpenExisting(AppConstants.ShowSettingsEventName);
+                showSettingsEvent.Set();
+            }
+            catch (WaitHandleCannotBeOpenedException)
+            {
+                // First instance hasn't created the event yet (still starting up) - nothing to do
+            }
             return;
         }
 

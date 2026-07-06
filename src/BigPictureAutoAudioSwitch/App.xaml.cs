@@ -23,6 +23,8 @@ public partial class App : Application
     private readonly IHost _host;
     private TaskbarIcon? _trayIcon;
     private IThemeService? _themeService;
+    private EventWaitHandle? _showSettingsEvent;
+    private RegisteredWaitHandle? _showSettingsWait;
 
     public App()
     {
@@ -135,6 +137,20 @@ public partial class App : Application
             
             // Apply theme to context menu initially
             UpdateContextMenuTheme();
+
+            // Listen for "show settings" signals from second instances
+            _showSettingsEvent = new EventWaitHandle(
+                false, EventResetMode.AutoReset, AppConstants.ShowSettingsEventName);
+            _showSettingsWait = ThreadPool.RegisterWaitForSingleObject(
+                _showSettingsEvent,
+                (_, _) => Dispatcher.BeginInvoke(() =>
+                {
+                    var trayViewModel = Services.GetRequiredService<TrayIconViewModel>();
+                    trayViewModel.ShowSettingsCommand.Execute(null);
+                }),
+                null,
+                Timeout.Infinite,
+                executeOnlyOnce: false);
         }
         catch (Exception ex)
         {
@@ -195,6 +211,10 @@ public partial class App : Application
             {
                 disposableTrayVm.Dispose();
             }
+
+            // Stop listening for second-instance signals
+            _showSettingsWait?.Unregister(null);
+            _showSettingsEvent?.Dispose();
 
             _trayIcon?.Dispose();
 

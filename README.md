@@ -44,7 +44,7 @@ The app will now automatically:
 - Switch to your selected audio device when Steam Big Picture Mode opens
 - Switch back to your previous audio device when Big Picture Mode closes
 
-> **Note:** Only one instance of the app runs at a time. Launching the executable again while it is already running has no effect — look for the icon in the system tray.
+> **Note:** Only one instance of the app runs at a time. Launching the executable again while it is already running opens the Settings window of the running instance.
 
 ## Building from Source
 
