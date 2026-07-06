@@ -44,6 +44,8 @@ The app will now automatically:
 - Switch to your selected audio device when Steam Big Picture Mode opens
 - Switch back to your previous audio device when Big Picture Mode closes
 
+> **Note:** Only one instance of the app runs at a time. Launching the executable again while it is already running has no effect — look for the icon in the system tray.
+
 ## Building from Source
 
 ### Prerequisites
@@ -54,7 +56,7 @@ The app will now automatically:
 
 ```powershell
 # Clone the repository
-git clone https://github.com/yourusername/big-picture-auto-audio-switch.git
+git clone https://github.com/PatchesTheFirst/big-picture-auto-audio-switch.git
 cd big-picture-auto-audio-switch
 
 # Build
@@ -95,10 +97,10 @@ big-picture-auto-audio-switch/
 
 ## How It Works
 
-1. **Detection**: The app uses `SetWinEventHook` to listen for window creation/destruction events
-2. **Filtering**: When a window with class `SDL_app` (Steam Big Picture) is detected, it triggers the audio switch
-3. **Audio Control**: Uses Windows Core Audio APIs via COM interop to enumerate devices and set the default playback device
-4. **Restoration**: When Big Picture closes, the original default device is restored
+1. **Detection**: The app uses `SetWinEventHook` to listen for window create, destroy, show, and hide events — no polling
+2. **Filtering**: A switch is only triggered when a window passes all three checks: window class is `SDL_app`, the title is exactly "Steam Big Picture Mode", and the owning process is `steam` or `steamwebhelper`. Other SDL applications (many games use the same window class) will not trigger a switch. A 1-second cooldown prevents rapid re-triggering when the window flickers
+3. **Audio Control**: Uses the Windows Core Audio APIs (NAudio for device enumeration, `IPolicyConfig` COM interop for switching) to set the default playback device for **all three audio roles** — Multimedia, Console, and Communications — so voice apps like Discord follow the switch too
+4. **Restoration**: When Big Picture closes, the device that was active before the switch is restored
 
 ## Configuration
 
@@ -117,6 +119,8 @@ Settings are stored in `%LOCALAPPDATA%\BigPictureAutoAudioSwitch\settings.json`:
 ## Logs
 
 Application logs are stored in `%LOCALAPPDATA%\BigPictureAutoAudioSwitch\logs\`.
+
+Logs roll over daily, and at most 7 log files are kept (max 50 MB each), so disk usage stays bounded.
 
 To enable verbose (debug) logging for troubleshooting:
 1. Open Settings from the tray icon
