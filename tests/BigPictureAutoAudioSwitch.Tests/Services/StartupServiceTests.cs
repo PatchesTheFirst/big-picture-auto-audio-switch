@@ -1,3 +1,4 @@
+using System.IO;
 using BigPictureAutoAudioSwitch.Services;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -174,6 +175,33 @@ public class StartupServiceTests : IDisposable
 
         // Assert
         result.Should().BeFalse();
+
+        // The registered path does not exist on disk, so the stale entry must be removed
+        using (var key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath, false))
+        {
+            key?.GetValue(AppName).Should().BeNull();
+        }
+    }
+
+    [Fact]
+    public async Task IsEnabledAndValidAsync_WhenPathMismatchButFileExists_KeepsEntry()
+    {
+        // Arrange - Register a path that mismatches but points to a real file
+        var existingFile = Path.Combine(Environment.SystemDirectory, "notepad.exe");
+        using (var key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath, true))
+        {
+            key?.SetValue(AppName, $"\"{existingFile}\"");
+        }
+
+        // Act
+        var result = await _startupService.IsEnabledAndValidAsync();
+
+        // Assert - invalid, but the entry survives because the file exists
+        result.Should().BeFalse();
+        using (var key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath, false))
+        {
+            (key?.GetValue(AppName) as string).Should().Be($"\"{existingFile}\"");
+        }
     }
 
     [Fact]

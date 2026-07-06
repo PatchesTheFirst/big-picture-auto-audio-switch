@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 
@@ -66,6 +67,18 @@ public class StartupService : IStartupService
                     "Startup path mismatch - registered: {RegisteredPath}, current: {CurrentPath}",
                     registeredPath,
                     expectedPath);
+
+                // If the registered exe no longer exists, the entry is dead weight:
+                // Windows would try to launch a missing file at every boot. Remove it.
+                // If the file exists it may belong to another copy of the app - leave it.
+                var unquotedPath = registeredPath.Trim('"');
+                if (!File.Exists(unquotedPath))
+                {
+                    using var writeKey = Registry.CurrentUser.OpenSubKey(RegistryKeyPath, true);
+                    writeKey?.DeleteValue(AppName, false);
+                    _logger.LogInformation(
+                        "Removed stale startup entry pointing to missing file: {Path}", unquotedPath);
+                }
             }
             else
             {

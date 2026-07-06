@@ -30,7 +30,7 @@ A modern Windows system tray application that automatically switches your defaul
 
 > **Note:** Windows SmartScreen may show a warning on first run since the app is not code-signed. Click "More info" → "Run anyway" to proceed.
 
-> **Startup Note:** If you enable "Launch on Windows startup" and later move the app to a different folder, you'll need to re-enable the startup option in Settings. The app automatically detects this and will show the checkbox as unchecked if the path no longer matches.
+> **Startup Note:** If you enable "Launch on Windows startup" and later move the app to a different folder, re-enable the startup option in Settings. The app detects the stale entry, cleans it up automatically, and shows the checkbox as unchecked.
 
 ## Usage
 
