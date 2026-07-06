@@ -18,7 +18,7 @@
     <Company>Big Picture Auto Audio Switch</Company>
     <Product>Big Picture Auto Audio Switch</Product>
     <Description>Automatically switch audio devices when Steam Big Picture Mode is detected</Description>
-    <Copyright>Copyright © 2026</Copyright>
+    <Copyright>Copyright © PatchesTheFirst</Copyright>
     
     <!-- Size optimization -->
     <PublishTrimmed>true</PublishTrimmed>
