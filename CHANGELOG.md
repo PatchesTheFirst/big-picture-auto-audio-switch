@@ -8,6 +8,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Pending
 - TODO: capture Settings window and tray menu screenshots for the README
 
+## [1.1.0] - 2026-07-07
+
+### Added
+- Automatic update check: the app checks GitHub daily for a new release and shows a toast notification plus an "Update available" tray menu item that opens the download page. Can be disabled in Settings.
+
 ## [1.0.1] - 2026-07-06
 
 ### Fixed

@@ -16,6 +16,7 @@
             <ContextMenu x:Name="TrayContextMenu">
                 <ContextMenu.Resources>
                     <!-- Context Menu gets its own copy of resources since it's not in the visual tree -->
+                    <BooleanToVisibilityConverter x:Key="UpdateBoolToVis" />
                     <Style TargetType="ContextMenu">
                         <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
                         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
@@ -95,6 +96,9 @@
                 </ContextMenu.Resources>
                 <MenuItem Header="{Binding Data.StatusText, Source={StaticResource ViewModelProxy}}" IsEnabled="False" FontWeight="SemiBold" />
                 <Separator />
+                <MenuItem Header="{Binding Data.UpdateMenuHeader, Source={StaticResource ViewModelProxy}}"
+                          Command="{Binding Data.OpenReleasePageCommand, Source={StaticResource ViewModelProxy}}"
+                          Visibility="{Binding Data.UpdateAvailable, Source={StaticResource ViewModelProxy}, Converter={StaticResource UpdateBoolToVis}}" />
                 <MenuItem Header="Settings..." Command="{Binding Data.ShowSettingsCommand, Source={StaticResource ViewModelProxy}}" />
                 <MenuItem Header="About..." Command="{Binding Data.ShowAboutCommand, Source={StaticResource ViewModelProxy}}" />
                 <Separator />

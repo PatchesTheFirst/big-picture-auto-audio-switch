@@ -8,11 +8,16 @@ namespace BigPictureAutoAudioSwitch.Tests.ViewModels;
 public class TrayIconViewModelTests
 {
     private readonly Mock<IBigPictureDetector> _detectorMock;
+    private readonly Mock<IUpdateCheckService> _updateCheckServiceMock;
 
     public TrayIconViewModelTests()
     {
         _detectorMock = new Mock<IBigPictureDetector>();
+        _updateCheckServiceMock = new Mock<IUpdateCheckService>();
     }
+
+    private TrayIconViewModel CreateViewModel()
+        => new(_detectorMock.Object, _updateCheckServiceMock.Object);
 
     [Fact]
     public void Constructor_InitializesStatusText()
@@ -21,7 +26,7 @@ public class TrayIconViewModelTests
         _detectorMock.Setup(d => d.IsBigPictureActive).Returns(false);
 
         // Act
-        var viewModel = new TrayIconViewModel(_detectorMock.Object);
+        var viewModel = CreateViewModel();
 
         // Assert
         viewModel.StatusText.Should().Be("Monitoring for Big Picture");
@@ -34,7 +39,7 @@ public class TrayIconViewModelTests
         _detectorMock.Setup(d => d.IsBigPictureActive).Returns(true);
 
         // Act
-        var viewModel = new TrayIconViewModel(_detectorMock.Object);
+        var viewModel = CreateViewModel();
 
         // Assert
         viewModel.StatusText.Should().Be("Big Picture Mode Active");
@@ -45,7 +50,7 @@ public class TrayIconViewModelTests
     {
         // Arrange
         _detectorMock.Setup(d => d.IsBigPictureActive).Returns(false);
-        var viewModel = new TrayIconViewModel(_detectorMock.Object);
+        var viewModel = CreateViewModel();
         viewModel.StatusText.Should().Be("Monitoring for Big Picture");
 
         // Simulate Big Picture activation
@@ -63,7 +68,7 @@ public class TrayIconViewModelTests
     {
         // Arrange
         _detectorMock.Setup(d => d.IsBigPictureActive).Returns(true);
-        var viewModel = new TrayIconViewModel(_detectorMock.Object);
+        var viewModel = CreateViewModel();
         viewModel.StatusText.Should().Be("Big Picture Mode Active");
 
         // Simulate Big Picture deactivation
@@ -74,5 +79,47 @@ public class TrayIconViewModelTests
 
         // Assert
         viewModel.StatusText.Should().Be("Monitoring for Big Picture");
+    }
+
+    [Fact]
+    public void Constructor_WhenNoUpdateAvailable_HidesUpdateMenuItem()
+    {
+        // Act
+        var viewModel = CreateViewModel();
+
+        // Assert
+        viewModel.UpdateAvailable.Should().BeFalse();
+        viewModel.UpdateMenuHeader.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Constructor_WhenUpdateAlreadyDetected_ShowsUpdateMenuItem()
+    {
+        // Arrange - service found an update before the view model was created
+        var update = new UpdateInfo("1.0.2", "https://github.com/owner/repo/releases/tag/v1.0.2");
+        _updateCheckServiceMock.Setup(u => u.AvailableUpdate).Returns(update);
+
+        // Act
+        var viewModel = CreateViewModel();
+
+        // Assert
+        viewModel.UpdateAvailable.Should().BeTrue();
+        viewModel.UpdateMenuHeader.Should().Be("Update available (v1.0.2)...");
+    }
+
+    [Fact]
+    public void UpdateAvailableEvent_ShowsUpdateMenuItem()
+    {
+        // Arrange
+        var viewModel = CreateViewModel();
+        viewModel.UpdateAvailable.Should().BeFalse();
+        var update = new UpdateInfo("1.0.2", "https://github.com/owner/repo/releases/tag/v1.0.2");
+
+        // Act - Raise the event
+        _updateCheckServiceMock.Raise(u => u.UpdateAvailable += null, _updateCheckServiceMock.Object, update);
+
+        // Assert
+        viewModel.UpdateAvailable.Should().BeTrue();
+        viewModel.UpdateMenuHeader.Should().Be("Update available (v1.0.2)...");
     }
 }

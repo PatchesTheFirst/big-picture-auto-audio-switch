@@ -11,6 +11,7 @@ A modern Windows system tray application that automatically switches your defaul
 - **Modern UI**: WPF-based settings window with clean, themed interface
 - **Toast Notifications**: Optional notifications when audio is switched
 - **Device Validation**: Warns you if a previously configured device is no longer available
+- **Update Check**: Notifies you when a new version is available on GitHub (can be disabled in Settings)
 - **Launch on Startup**: Configure the app to start with Windows
 - **System Tray**: Runs silently in the system tray with quick access menu
 - **Verbose Logging**: Optional debug logging for troubleshooting (auto-disables after 48 hours)
@@ -112,7 +113,8 @@ Settings are stored in `%LOCALAPPDATA%\BigPictureAutoAudioSwitch\settings.json`:
   "launchOnStartup": false,
   "showNotifications": true,
   "verboseLogging": false,
-  "verboseLoggingEnabledAt": null
+  "verboseLoggingEnabledAt": null,
+  "checkForUpdates": true
 }
 ```
 

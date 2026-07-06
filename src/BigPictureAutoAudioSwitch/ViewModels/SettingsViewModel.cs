@@ -36,6 +36,9 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
     private bool _verboseLogging;
 
     [ObservableProperty]
+    private bool _checkForUpdates;
+
+    [ObservableProperty]
     private bool _hasChanges;
 
     [ObservableProperty]
@@ -117,6 +120,7 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
         LaunchOnStartup = await _startupService.IsEnabledAndValidAsync();
         ShowNotifications = _settingsService.Settings.ShowNotifications;
         VerboseLogging = _loggingService.IsVerboseLogging;
+        CheckForUpdates = _settingsService.Settings.CheckForUpdates;
         
         HasChanges = false;
     }
@@ -153,6 +157,14 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
         }
     }
 
+    partial void OnCheckForUpdatesChanged(bool value)
+    {
+        if (!IsLoading)
+        {
+            HasChanges = true;
+        }
+    }
+
     [RelayCommand]
     private async Task SaveAsync()
     {
@@ -172,6 +184,7 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
 
         _settingsService.Settings.TargetDeviceId = SelectedDevice?.Id;
         _settingsService.Settings.ShowNotifications = ShowNotifications;
+        _settingsService.Settings.CheckForUpdates = CheckForUpdates;
         
         // Apply verbose logging setting (this updates the level switch immediately)
         _loggingService.SetVerboseLogging(VerboseLogging);

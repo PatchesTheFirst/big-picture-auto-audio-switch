@@ -28,4 +28,10 @@ public static class AppConstants
     public static readonly TimeSpan VerboseLoggingTimeout = TimeSpan.FromHours(48);
     public const int LogRetainedFileCount = 7;
     public const long LogFileSizeLimitBytes = 50_000_000;
+
+    // Update checks
+    public const string GitHubRepoUrl = "https://github.com/PatchesTheFirst/big-picture-auto-audio-switch";
+    public const string LatestReleaseApiUrl = "https://api.github.com/repos/PatchesTheFirst/big-picture-auto-audio-switch/releases/latest";
+    public static readonly TimeSpan UpdateCheckInitialDelay = TimeSpan.FromSeconds(30);
+    public static readonly TimeSpan UpdateCheckInterval = TimeSpan.FromHours(24);
 }

@@ -61,6 +61,7 @@ public partial class App : Application
                 services.AddSingleton<IStartupService, StartupService>();
                 services.AddSingleton<IThemeService, ThemeService>();
                 services.AddSingleton<ISettingsValidator, SettingsValidator>();
+                services.AddSingleton<IUpdateCheckService, UpdateCheckService>();
 
                 // ViewModels
                 services.AddTransient<SettingsViewModel>();
@@ -129,6 +130,9 @@ public partial class App : Application
 
             var detector = Services.GetRequiredService<IBigPictureDetector>();
             detector.Start();
+
+            var updateCheckService = Services.GetRequiredService<IUpdateCheckService>();
+            updateCheckService.Start();
 
             // Create tray icon
             _trayIcon = (TaskbarIcon)FindResource("TrayIcon");
@@ -199,6 +203,12 @@ public partial class App : Application
 
             var detector = Services.GetRequiredService<IBigPictureDetector>();
             detector.Stop();
+
+            // Dispose UpdateCheckService (implements IDisposable)
+            if (Services.GetRequiredService<IUpdateCheckService>() is IDisposable disposableUpdateCheck)
+            {
+                disposableUpdateCheck.Dispose();
+            }
 
             // Dispose AudioService (implements IDisposable)
             if (Services.GetRequiredService<IAudioService>() is IDisposable disposableAudio)

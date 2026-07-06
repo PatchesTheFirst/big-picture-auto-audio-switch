@@ -7,6 +7,7 @@ public class AppSettings
     public bool ShowNotifications { get; set; } = true;
     public bool VerboseLogging { get; set; } = false;
     public DateTime? VerboseLoggingEnabledAt { get; set; }
+    public bool CheckForUpdates { get; set; } = true;
 }
 
 public interface ISettingsService

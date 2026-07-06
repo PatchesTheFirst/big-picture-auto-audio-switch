@@ -54,4 +54,25 @@ public class NotificationService : INotificationService
             _logger.LogWarning(ex, "Failed to display device missing notification for '{DeviceName}'. Notifications may be disabled in Windows Settings.", deviceName);
         }
     }
+
+    public void ShowUpdateAvailable(string version, string releaseUrl)
+    {
+        const string title = "Update Available";
+        var message = $"Version {version} is available. Click to open the download page.";
+
+        try
+        {
+            new ToastContentBuilder()
+                .AddText(title)
+                .AddText(message)
+                .SetProtocolActivation(new Uri(releaseUrl))
+                .Show();
+
+            _logger.LogDebug("Successfully displayed update notification for version {Version}", version);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to display update notification for version {Version}. Notifications may be disabled in Windows Settings.", version);
+        }
+    }
 }

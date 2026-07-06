@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Big Picture Auto Audio Switch - Settings"
-        Height="620"
+        Height="650"
         Width="580"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource BackgroundBrush}"
@@ -104,8 +104,12 @@
                       IsChecked="{Binding LaunchOnStartup}"
                       Margin="0,0,0,8" />
             
-            <CheckBox Content="Show notifications when audio switches" 
+            <CheckBox Content="Show notifications when audio switches"
                       IsChecked="{Binding ShowNotifications}"
+                      Margin="0,0,0,8" />
+
+            <CheckBox Content="Automatically check for updates"
+                      IsChecked="{Binding CheckForUpdates}"
                       Margin="0,0,0,8" />
             
             <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
