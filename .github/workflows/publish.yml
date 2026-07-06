@@ -36,15 +36,6 @@ jobs:
     - name: Run tests
       run: dotnet test --no-restore --verbosity normal
       
-    - name: Publish application
-      run: |
-        dotnet publish src/BigPictureAutoAudioSwitch/BigPictureAutoAudioSwitch.csproj `
-          -c Release `
-          -r win-x64 `
-          -p:PublishSingleFile=true `
-          --self-contained true `
-          -o publish
-          
     - name: Get version
       id: version
       shell: pwsh
@@ -54,9 +45,25 @@ jobs:
         } else {
           $version = "dev-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
         }
+        if ($version -match '^\d+\.\d+\.\d+$') {
+          $msbuildVersion = $version
+        } else {
+          $msbuildVersion = '1.0.0'
+        }
         echo "VERSION=$version" >> $env:GITHUB_OUTPUT
-        echo "Version: $version"
-        
+        echo "MSBUILD_VERSION=$msbuildVersion" >> $env:GITHUB_OUTPUT
+        echo "Version: $version (MSBuild: $msbuildVersion)"
+
+    - name: Publish application
+      run: |
+        dotnet publish src/BigPictureAutoAudioSwitch/BigPictureAutoAudioSwitch.csproj `
+          -c Release `
+          -r win-x64 `
+          -p:PublishSingleFile=true `
+          -p:Version=${{ steps.version.outputs.MSBUILD_VERSION }} `
+          --self-contained true `
+          -o publish
+
     - name: Create zip archive
       shell: pwsh
       run: |
