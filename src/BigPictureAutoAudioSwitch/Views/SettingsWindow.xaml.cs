@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using BigPictureAutoAudioSwitch.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -17,6 +18,7 @@ public partial class SettingsWindow : Window
         
         Loaded += OnLoaded;
         Closed += OnClosed;
+        Closing += OnClosing;
     }
 
     private async void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
@@ -39,5 +41,21 @@ public partial class SettingsWindow : Window
     private void OnClosed(object? sender, EventArgs e)
     {
         _viewModel.Dispose();
+    }
+
+    private void OnClosing(object? sender, CancelEventArgs e)
+    {
+        if (!_viewModel.HasChanges) return;
+
+        var result = System.Windows.MessageBox.Show(
+            "You have unsaved changes. Close without saving?",
+            "Unsaved Changes",
+            System.Windows.MessageBoxButton.YesNo,
+            System.Windows.MessageBoxImage.Warning);
+
+        if (result == System.Windows.MessageBoxResult.No)
+        {
+            e.Cancel = true;
+        }
     }
 }
