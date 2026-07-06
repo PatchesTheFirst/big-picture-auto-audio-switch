@@ -34,9 +34,14 @@ public class LoggingService : ILoggingService
 
         if (enabled)
         {
-            _settingsService.Settings.VerboseLoggingEnabledAt = DateTime.UtcNow;
+            // Only stamp on the off->on transition so re-saving settings
+            // doesn't extend the 48-hour auto-disable window
+            if (!wasEnabled || _settingsService.Settings.VerboseLoggingEnabledAt == null)
+            {
+                _settingsService.Settings.VerboseLoggingEnabledAt = DateTime.UtcNow;
+                _logger.LogInformation("Verbose logging enabled");
+            }
             _levelSwitch.MinimumLevel = LogEventLevel.Debug;
-            _logger.LogInformation("Verbose logging enabled");
         }
         else
         {

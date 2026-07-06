@@ -176,7 +176,7 @@ public class LoggingServiceTests
     }
 
     [Fact]
-    public void SetVerboseLogging_WhenEnablingTwice_UpdatesTimestamp()
+    public void SetVerboseLogging_WhenAlreadyEnabled_PreservesTimestamp()
     {
         // Arrange
         var service = CreateService();
@@ -187,8 +187,24 @@ public class LoggingServiceTests
         // Act
         service.SetVerboseLogging(true);
 
-        // Assert - Timestamp should be updated to now
-        _settings.VerboseLoggingEnabledAt.Should().NotBe(originalTimestamp);
+        // Assert - Re-enabling must NOT extend the 48h auto-disable window
+        _settings.VerboseLoggingEnabledAt.Should().Be(originalTimestamp);
+        _levelSwitch.MinimumLevel.Should().Be(LogEventLevel.Debug);
+    }
+
+    [Fact]
+    public void SetVerboseLogging_WhenEnabledButTimestampMissing_SetsTimestamp()
+    {
+        // Arrange - inconsistent state: enabled without a timestamp
+        var service = CreateService();
+        _settings.VerboseLogging = true;
+        _settings.VerboseLoggingEnabledAt = null;
+
+        // Act
+        service.SetVerboseLogging(true);
+
+        // Assert
+        _settings.VerboseLoggingEnabledAt.Should().NotBeNull();
         _settings.VerboseLoggingEnabledAt.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
     }
 
