@@ -10,7 +10,10 @@ namespace BigPictureAutoAudioSwitch.Tests.Services;
 /// <summary>
 /// Integration tests for StartupService.
 /// These tests interact with the Windows Registry and clean up after themselves.
+/// Excluded from CI (see ci.yml/publish.yml) - hosted runners don't grant write
+/// access to HKCU\...\Run, which makes every write-then-assert case fail there.
 /// </summary>
+[Trait("Category", "Integration")]
 public class StartupServiceTests : IDisposable
 {
     private const string RegistryKeyPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
